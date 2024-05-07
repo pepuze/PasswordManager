@@ -9,7 +9,7 @@ namespace PasswordKeeper
 {
     class DB_Class
     {
-        SqlConnection db_connect = new SqlConnection(@"Data Source=DESKTOP-6FEPCHS\SQLEXPRESS;Initial Catalog=passwords;Integrated Security=True");
+        SqlConnection db_connect = new SqlConnection(@"Data Source=DESKTOP-EB6KVID\SQLEXPRESS;Initial Catalog=passwords;Integrated Security=True");
         public void openConnection()
         {
             if (db_connect.State == System.Data.ConnectionState.Closed)

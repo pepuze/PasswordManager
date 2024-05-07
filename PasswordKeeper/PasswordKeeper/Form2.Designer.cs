@@ -38,12 +38,11 @@
             checkBox1 = new CheckBox();
             label4 = new Label();
             textBox4 = new TextBox();
-            textBox5 = new TextBox();
             label5 = new Label();
             label6 = new Label();
-            button1 = new Button();
             button2 = new Button();
             button3 = new Button();
+            maskedTextBox1 = new MaskedTextBox();
             SuspendLayout();
             // 
             // textBox1
@@ -97,12 +96,13 @@
             // checkBox1
             // 
             checkBox1.AutoSize = true;
-            checkBox1.Location = new Point(35, 178);
+            checkBox1.Location = new Point(70, 174);
             checkBox1.Name = "checkBox1";
             checkBox1.Size = new Size(119, 19);
             checkBox1.TabIndex = 6;
             checkBox1.Text = "Показать пароль";
             checkBox1.UseVisualStyleBackColor = true;
+            checkBox1.CheckedChanged += checkBox1_CheckedChanged;
             // 
             // label4
             // 
@@ -119,13 +119,6 @@
             textBox4.Name = "textBox4";
             textBox4.Size = new Size(236, 23);
             textBox4.TabIndex = 8;
-            // 
-            // textBox5
-            // 
-            textBox5.Location = new Point(128, 309);
-            textBox5.Name = "textBox5";
-            textBox5.Size = new Size(236, 23);
-            textBox5.TabIndex = 9;
             // 
             // label5
             // 
@@ -145,18 +138,8 @@
             label6.TabIndex = 11;
             label6.Text = "Телефон:";
             // 
-            // button1
-            // 
-            button1.Location = new Point(278, 175);
-            button1.Name = "button1";
-            button1.Size = new Size(145, 23);
-            button1.TabIndex = 12;
-            button1.Text = "Сгенерировать пароль";
-            button1.UseVisualStyleBackColor = true;
-            // 
             // button2
             // 
-            button2.DialogResult = DialogResult.OK;
             button2.Location = new Point(35, 359);
             button2.Name = "button2";
             button2.Size = new Size(153, 40);
@@ -175,17 +158,25 @@
             button3.UseVisualStyleBackColor = true;
             button3.Click += button3_Click;
             // 
+            // maskedTextBox1
+            // 
+            maskedTextBox1.Location = new Point(128, 309);
+            maskedTextBox1.Mask = "+7 (000) 000-0000";
+            maskedTextBox1.Name = "maskedTextBox1";
+            maskedTextBox1.Size = new Size(236, 23);
+            maskedTextBox1.TabIndex = 15;
+            maskedTextBox1.TextMaskFormat = MaskFormat.ExcludePromptAndLiterals;
+            // 
             // Form2
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(461, 421);
+            Controls.Add(maskedTextBox1);
             Controls.Add(button3);
             Controls.Add(button2);
-            Controls.Add(button1);
             Controls.Add(label6);
             Controls.Add(label5);
-            Controls.Add(textBox5);
             Controls.Add(textBox4);
             Controls.Add(label4);
             Controls.Add(checkBox1);
@@ -213,11 +204,10 @@
         private CheckBox checkBox1;
         private Label label4;
         private TextBox textBox4;
-        private TextBox textBox5;
         private Label label5;
         private Label label6;
-        private Button button1;
         private Button button2;
         private Button button3;
+        private MaskedTextBox maskedTextBox1;
     }
 }
