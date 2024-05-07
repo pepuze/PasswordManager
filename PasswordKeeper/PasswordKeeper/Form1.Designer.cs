@@ -39,7 +39,6 @@
             label2 = new Label();
             label3 = new Label();
             label4 = new Label();
-            textBox2 = new TextBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -82,6 +81,7 @@
             checkBox1.TabIndex = 3;
             checkBox1.Text = "Показать пароль";
             checkBox1.UseVisualStyleBackColor = true;
+            checkBox1.CheckedChanged += checkBox1_CheckedChanged;
             // 
             // label1
             // 
@@ -111,11 +111,12 @@
             dataGridView1.Size = new Size(719, 265);
             dataGridView1.TabIndex = 6;
             dataGridView1.CellClick += dataGridView1_CellClick;
+            dataGridView1.CellFormatting += dataGridView1_CellFormatting;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(225, 417);
+            label2.Location = new Point(22, 418);
             label2.Name = "label2";
             label2.Size = new Size(37, 15);
             label2.TabIndex = 7;
@@ -124,7 +125,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(225, 444);
+            label3.Location = new Point(22, 444);
             label3.Name = "label3";
             label3.Size = new Size(58, 15);
             label3.TabIndex = 8;
@@ -139,19 +140,11 @@
             label4.TabIndex = 9;
             label4.Text = "Дополнительная информация";
             // 
-            // textBox2
-            // 
-            textBox2.Location = new Point(558, 399);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(100, 23);
-            textBox2.TabIndex = 10;
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(743, 468);
-            Controls.Add(textBox2);
             Controls.Add(label4);
             Controls.Add(label3);
             Controls.Add(label2);
@@ -183,6 +176,5 @@
         private Label label2;
         private Label label3;
         private Label label4;
-        private TextBox textBox2;
     }
 }

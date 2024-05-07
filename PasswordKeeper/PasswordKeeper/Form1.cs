@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using System.Security.Policy;
+using System.Reflection;
 
 namespace PasswordKeeper
 {
@@ -143,6 +144,26 @@ namespace PasswordKeeper
                 dataBase.closeConnection();
                 RefreshDataGrid(dataGridView1);
             }
+        }
+
+        private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (checkBox1.Checked == false)
+                if (e.ColumnIndex == 3)
+                    if (e.Value != null)
+                        e.Value = new string('*', 10);
+            if (e.ColumnIndex == 1)
+                if (e.Value != null)
+                {
+                    Uri site_uri = new Uri(e.Value.ToString());
+                    string site_host = site_uri.Host;
+                    e.Value = new string(site_host);
+                }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            RefreshDataGrid(dataGridView1);
         }
     }
 }
