@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Security.Policy;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -42,18 +43,34 @@ namespace PasswordKeeper
         private void button2_Click(object sender, EventArgs e)
         {
             bool site_res = Uri.IsWellFormedUriString(textBox1.Text, UriKind.Absolute);
+            f2_site = textBox1.Text;
+            f2_userLogin = textBox2.Text;
+            f2_userPass = textBox3.Text;
+            f2_userPhone = maskedTextBox1.Text;
+
+            if (f2_site == "" || f2_userLogin == "" || f2_userPass == "")
+            {
+                MessageBox.Show("Вы не ввели сайт, логин и пароль для добавления пароля!", "Внимание");
+                return;
+            }
+
             if (site_res == false)
             {
                 MessageBox.Show("Поле сайта не является URL!", "Внимание");
                 return;
             }
-            f2_site = textBox1.Text;
-            f2_userLogin = textBox2.Text;
-            f2_userPass = textBox3.Text;
-            f2_userPhone = maskedTextBox1.Text;
-            if (f2_site == "" || f2_userLogin == "" || f2_userPass == "")
+
+            try
             {
-                MessageBox.Show("Вы не ввели сайт, логин и пароль для добавления пароля!", "Внимание");
+                HttpWebRequest request = WebRequest.Create(f2_site) as HttpWebRequest;
+                request.Timeout = 5000;
+                request.AllowAutoRedirect = false;
+                var response = request.GetResponse();
+                response.Close();
+            }
+            catch
+            {
+                MessageBox.Show("Сайт не существует!", "Внимание");
                 return;
             }
 
@@ -69,8 +86,8 @@ namespace PasswordKeeper
                 return;
             }
 
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         private bool checkIfFullName(string FullName, out string FullNameNew)

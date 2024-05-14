@@ -39,7 +39,6 @@
             label2 = new Label();
             label3 = new Label();
             label4 = new Label();
-            textBox2 = new TextBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -141,19 +140,11 @@
             label4.TabIndex = 9;
             label4.Text = "Дополнительная информация";
             // 
-            // textBox2
-            // 
-            textBox2.Location = new Point(308, 410);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(337, 23);
-            textBox2.TabIndex = 10;
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(743, 468);
-            Controls.Add(textBox2);
             Controls.Add(label4);
             Controls.Add(label3);
             Controls.Add(label2);
@@ -185,6 +176,5 @@
         private Label label2;
         private Label label3;
         private Label label4;
-        private TextBox textBox2;
     }
 }
