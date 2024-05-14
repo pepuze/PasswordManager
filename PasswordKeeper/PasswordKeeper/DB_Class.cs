@@ -9,17 +9,30 @@ namespace PasswordKeeper
 {
     class DB_Class
     {
-        SqlConnection db_connect = new SqlConnection(@"Data Source=DESKTOP-EB6KVID\SQLEXPRESS;Initial Catalog=passwords;Integrated Security=True");
-        public void openConnection()
+        SqlConnection db_connect_process = new SqlConnection("Data Source=" + SystemInformation.ComputerName + @"\SQLEXPRESS;Initial Catalog=passwords;Integrated Security=True");
+        SqlConnection db_connect_protocol = new SqlConnection("Data Source=" + SystemInformation.ComputerName + @"\SQLEXPRESS;Initial Catalog=protocol_db;Integrated Security=True");
+        public void openConnection_Process()
         {
-            if (db_connect.State == System.Data.ConnectionState.Closed)
-                db_connect.Open();
+            if (db_connect_process.State == System.Data.ConnectionState.Closed)
+                db_connect_process.Open();
         }
-        public void closeConnection()
+        public void closeConnection_Process()
         {
-            if (db_connect.State == System.Data.ConnectionState.Open)
-                db_connect.Close();
+            if (db_connect_process.State == System.Data.ConnectionState.Open)
+                db_connect_process.Close();
         }
-        public SqlConnection get_connection() { return db_connect; }
+        public SqlConnection get_connection_process() { return db_connect_process; }
+
+        public void openConnection_Protocol()
+        {
+            if (db_connect_protocol.State == System.Data.ConnectionState.Closed)
+                db_connect_protocol.Open();
+        }
+        public void closeConnection_Protocol()
+        {
+            if (db_connect_protocol.State == System.Data.ConnectionState.Open)
+                db_connect_protocol.Close();
+        }
+        public SqlConnection get_connection_protocol() { return db_connect_protocol; }
     }
 }

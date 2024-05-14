@@ -31,6 +31,10 @@ namespace PasswordKeeper
             dataGridView1.Columns.Add("password_str", "Пароль");
             dataGridView1.Columns.Add("user_name", "ФИО");
             dataGridView1.Columns.Add("phone", "Телефон");
+            dataGridView1.Columns[0].Width = 50;
+            dataGridView1.Columns[1].Width = 160;
+            dataGridView1.Columns[2].Width = 300;
+            dataGridView1.Columns[3].Width = 150;
         }
 
         private void ReadSingleRow(DataGridView dataGrid, IDataRecord record)
@@ -43,8 +47,8 @@ namespace PasswordKeeper
         {
             dataGrid.Rows.Clear();
             string query = $"select * from password_table";
-            SqlCommand cmd = new SqlCommand(query, dataBase.get_connection());
-            dataBase.openConnection();
+            SqlCommand cmd = new SqlCommand(query, dataBase.get_connection_process());
+            dataBase.openConnection_Process();
             SqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read()) { ReadSingleRow(dataGrid, reader); }
             reader.Close();
@@ -55,8 +59,8 @@ namespace PasswordKeeper
             dataGrid.Rows.Clear();
             string stringQuery = $"select * from password_table where concat (site_name, pass_login) " +
                 $"like '%" + textBox1.Text + "%'";
-            SqlCommand cmd = new SqlCommand(stringQuery, dataBase.get_connection());
-            dataBase.openConnection();
+            SqlCommand cmd = new SqlCommand(stringQuery, dataBase.get_connection_process());
+            dataBase.openConnection_Process();
             SqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read()) { ReadSingleRow(dataGrid, reader); }
             reader.Close();
@@ -86,16 +90,23 @@ namespace PasswordKeeper
             Form2 f2 = new Form2();
             if (f2.ShowDialog() == DialogResult.OK)
             {
-                dataBase.openConnection();
+                dataBase.openConnection_Process();
                 if (f2.f2_site != "" && f2.f2_userLogin != "" && f2.f2_userPass != "")
                 {
                     var addQuery = $"insert into password_table (site_name, pass_login, password_str, user_name, phone) values " +
                     $"('{f2.f2_site}', '{f2.f2_userLogin}', '{f2.f2_userPass}', '{f2.f2_userName}', '{f2.f2_userPhone}')";
-                    var command = new SqlCommand(addQuery, dataBase.get_connection());
+                    var command = new SqlCommand(addQuery, dataBase.get_connection_process());
                     command.ExecuteNonQuery();
                 }
-                dataBase.closeConnection();
+                dataBase.closeConnection_Process();
+                DateTime now = DateTime.Now;
                 RefreshDataGrid(dataGridView1);
+                dataBase.openConnection_Protocol();
+                var addQuery_Protocol = $"insert into operations_info (dateTimeInfo, userInfo, operation) values " +
+                    $"('{now.ToString()}', '{"user"}', '{"Добавление пароля"}')";
+                var command_protocol = new SqlCommand(addQuery_Protocol, dataBase.get_connection_protocol());
+                command_protocol.ExecuteNonQuery();
+                dataBase.closeConnection_Protocol();
             }
         }
 
@@ -109,15 +120,22 @@ namespace PasswordKeeper
             if (MessageBox.Show("Вы действительно хотите удалить запись?", "Внимание", MessageBoxButtons.YesNo,
                 MessageBoxIcon.Warning) == DialogResult.No)
                 return;
-            dataBase.openConnection();
+            dataBase.openConnection_Process();
             int index = dataGridView1.CurrentCell.RowIndex;
             var idNum = Convert.ToInt32(dataGridView1.Rows[index].Cells[0].Value);
             var deleteQuery = $"delete from password_table where id_pass_info = {idNum}";
 
-            var command = new SqlCommand(deleteQuery, dataBase.get_connection());
+            var command = new SqlCommand(deleteQuery, dataBase.get_connection_process());
             command.ExecuteNonQuery();
-            dataBase.closeConnection();
+            dataBase.closeConnection_Process();
+            DateTime now = DateTime.Now;
             RefreshDataGrid(dataGridView1);
+            dataBase.openConnection_Protocol();
+            var deleteQuery_Protocol = $"insert into operations_info (dateTimeInfo, userInfo, operation) values " +
+                $"('{now.ToString()}', '{"user"}', '{"Удаление пароля"}')";
+            var command_protocol = new SqlCommand(deleteQuery_Protocol, dataBase.get_connection_protocol());
+            command_protocol.ExecuteNonQuery();
+            dataBase.closeConnection_Protocol();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -133,16 +151,23 @@ namespace PasswordKeeper
             f2.SetTextBox();
             if (f2.ShowDialog() == DialogResult.OK)
             {
-                dataBase.openConnection();
+                dataBase.openConnection_Process();
                 if (f2.f2_site != "" && f2.f2_userLogin != "" && f2.f2_userPass != "")
                 {
                     var updateQuery = $"update password_table set site_name = '{f2.f2_site}', pass_login = '{f2.f2_userLogin}', password_str = '{f2.f2_userPass}', " +
                         $"user_name = '{f2.f2_userName}', phone = '{f2.f2_userPhone}' where id_pass_info = '{idNum}'";
-                    var command = new SqlCommand(updateQuery, dataBase.get_connection());
+                    var command = new SqlCommand(updateQuery, dataBase.get_connection_process());
                     command.ExecuteNonQuery();
                 }
-                dataBase.closeConnection();
+                dataBase.closeConnection_Process();
+                DateTime now = DateTime.Now;
                 RefreshDataGrid(dataGridView1);
+                dataBase.openConnection_Protocol();
+                var updateQuery_Protocol = $"insert into operations_info (dateTimeInfo, userInfo, operation) values " +
+                    $"('{now.ToString()}', '{"user"}', '{"Изменение пароля и/или доп. информации"}')";
+                var command_protocol = new SqlCommand(updateQuery_Protocol, dataBase.get_connection_protocol());
+                command_protocol.ExecuteNonQuery();
+                dataBase.closeConnection_Protocol();
             }
         }
 
