@@ -16,7 +16,7 @@ namespace PasswordKeeper
     public partial class Form1 : Form
     {
         int selectedRow;
-        public string userName = "User1"; //Имя пользователя
+        public string userName = "User2"; //Имя пользователя
 
         public Form1()
         {
@@ -96,8 +96,7 @@ namespace PasswordKeeper
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //dbUserCreate(userName); //Создание БД для пользователя
-            //tableUserCreate(userName); //Создание таблицы password_table для БД пользователя
+            dbUserCreate(userName); //Создание БД для пользователя
 
             CreateColumns();
             RefreshDataGrid(dataGridView1);
@@ -246,29 +245,26 @@ namespace PasswordKeeper
 
         private void dbUserCreate(string userName)
         {
-            string str;
-            SqlConnection myConn = new SqlConnection("Server=" + SystemInformation.ComputerName + $@"\SQLEXPRESS;Integrated Security=True;database=master");
+            string str_db;
+            SqlConnection myConn_db = new SqlConnection("Server=" + SystemInformation.ComputerName + $@"\SQLEXPRESS;Integrated Security=True;database=master");
 
-            str = $"CREATE DATABASE {userName}";
+            str_db = $"CREATE DATABASE {userName}";
 
-            SqlCommand myCommand = new SqlCommand(str, myConn);
-            myConn.Open();
-            myCommand.ExecuteNonQuery();
-            myConn.Close();
-        }
+            SqlCommand myCommand1 = new SqlCommand(str_db, myConn_db);
+            myConn_db.Open();
+            myCommand1.ExecuteNonQuery();
+            myConn_db.Close();
 
-        private void tableUserCreate(string userName)
-        {
-            string str;
-            SqlConnection myConn = new SqlConnection("Data Source=" + SystemInformation.ComputerName + $@"\SQLEXPRESS;Initial Catalog={userName};Integrated Security=True");
+            string str_table;
+            SqlConnection myConn_table = new SqlConnection("Data Source=" + SystemInformation.ComputerName + $@"\SQLEXPRESS;Initial Catalog={userName};Integrated Security=True");
 
-            str = "CREATE TABLE password_table (id_pass_info INT PRIMARY KEY IDENTITY, site_name NVARCHAR(50), pass_login "
+            str_table = "CREATE TABLE password_table (id_pass_info INT PRIMARY KEY IDENTITY, site_name NVARCHAR(50), pass_login "
             + "NVARCHAR(100), password_str VARCHAR(50), user_name VARCHAR(120), phone VARCHAR(17));";
 
-            SqlCommand myCommand = new SqlCommand(str, myConn);
-            myConn.Open();
-            myCommand.ExecuteNonQuery();
-            myConn.Close();
+            SqlCommand myCommand2 = new SqlCommand(str_table, myConn_table);
+            myConn_table.Open();
+            myCommand2.ExecuteNonQuery();
+            myConn_table.Close();
         }
     }
 }
