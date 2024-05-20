@@ -16,7 +16,7 @@ namespace PasswordKeeper
     public partial class Form1 : Form
     {
         int selectedRow;
-        public string userName = "User1"; //Имя пользователя
+        static public string userName = "User1"; //Имя пользователя
 
         public Form1()
         {
@@ -37,39 +37,39 @@ namespace PasswordKeeper
             dataGridView1.Columns[3].Width = 150;
         }
 
-        private void ReadSingleRow(DataGridView dataGrid, IDataRecord record) //Интерфейс IDataRecord предоставляет доступ к значениям столбцов в каждой строке.
+        static public void ReadSingleRow(DataGridView dataGrid, IDataRecord record) //Интерфейс IDataRecord предоставляет доступ к значениям столбцов в каждой строке.
         {
             dataGrid.Rows.Add(record.GetInt32(0), record.GetString(1), record.GetString(2), record.GetString(3), record.GetString(4),
                 record.GetString(5));
         }
 
-        private void openConnection(SqlConnection connect)
+        static public void openConnection(SqlConnection connect)
         {
             if (connect.State == System.Data.ConnectionState.Closed)
                 connect.Open();
         }
 
-        private void closeConnection(SqlConnection connect)
+        static public void closeConnection(SqlConnection connect)
         {
             if (connect.State == System.Data.ConnectionState.Open)
                 connect.Close();
         }
 
-        private SqlConnection get_connection_process()
+        static public SqlConnection get_connection_process()
         {
             SqlConnection db_connect_process = new SqlConnection("Data Source=" + SystemInformation.ComputerName +
                 $@"\SQLEXPRESS;Initial Catalog={userName};Integrated Security=True");
             return db_connect_process;
         }
 
-        private SqlConnection get_connection_protocol()
+        static public SqlConnection get_connection_protocol()
         {
             SqlConnection db_connect_protocol = new SqlConnection("Data Source=" + SystemInformation.ComputerName +
                 @"\SQLEXPRESS;Initial Catalog=protocol_db;Integrated Security=True");
             return db_connect_protocol;
         }
 
-        private void RefreshDataGrid(DataGridView dataGrid)
+        static public void RefreshDataGrid(DataGridView dataGrid)
         {
             dataGrid.Rows.Clear();
             SqlConnection connect = get_connection_process();
