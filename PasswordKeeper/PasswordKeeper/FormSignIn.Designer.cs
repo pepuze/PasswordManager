@@ -28,64 +28,69 @@
         /// </summary>
         private void InitializeComponent()
         {
-            textBox1 = new TextBox();
-            textBox2 = new TextBox();
+            tb_Login = new TextBox();
+            tb_Password = new TextBox();
             label2 = new Label();
             bLogIn = new Button();
             label1 = new Label();
             bCreateAccount = new Button();
             SuspendLayout();
             // 
-            // textBox1
+            // tb_Login
             // 
-            textBox1.Location = new Point(135, 103);
-            textBox1.MaxLength = 64;
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(156, 23);
-            textBox1.TabIndex = 0;
+            tb_Login.Location = new Point(154, 130);
+            tb_Login.Margin = new Padding(3, 4, 3, 4);
+            tb_Login.MaxLength = 64;
+            tb_Login.Name = "tb_Login";
+            tb_Login.Size = new Size(178, 26);
+            tb_Login.TabIndex = 0;
             // 
-            // textBox2
+            // tb_Password
             // 
-            textBox2.HideSelection = false;
-            textBox2.Location = new Point(135, 132);
-            textBox2.MaxLength = 64;
-            textBox2.Name = "textBox2";
-            textBox2.PasswordChar = '*';
-            textBox2.Size = new Size(156, 23);
-            textBox2.TabIndex = 1;
+            tb_Password.HideSelection = false;
+            tb_Password.Location = new Point(154, 167);
+            tb_Password.Margin = new Padding(3, 4, 3, 4);
+            tb_Password.MaxLength = 64;
+            tb_Password.Name = "tb_Password";
+            tb_Password.PasswordChar = '*';
+            tb_Password.Size = new Size(178, 26);
+            tb_Password.TabIndex = 1;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(85, 106);
+            label2.Location = new Point(97, 134);
             label2.Name = "label2";
-            label2.Size = new Size(44, 15);
+            label2.Size = new Size(55, 20);
             label2.TabIndex = 3;
             label2.Text = "Логин:";
             // 
             // bLogIn
             // 
-            bLogIn.Location = new Point(178, 161);
+            bLogIn.Location = new Point(203, 204);
+            bLogIn.Margin = new Padding(3, 4, 3, 4);
             bLogIn.Name = "bLogIn";
-            bLogIn.Size = new Size(75, 23);
+            bLogIn.Size = new Size(86, 29);
             bLogIn.TabIndex = 4;
             bLogIn.Text = "Войти";
             bLogIn.UseVisualStyleBackColor = true;
+            bLogIn.Click += bLogIn_Click;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(77, 135);
+            label1.Location = new Point(88, 171);
             label1.Name = "label1";
-            label1.Size = new Size(52, 15);
+            label1.Size = new Size(65, 20);
             label1.TabIndex = 5;
             label1.Text = "Пароль:";
             // 
             // bCreateAccount
             // 
-            bCreateAccount.Location = new Point(135, 190);
+            bCreateAccount.Location = new Point(145, 241);
+            bCreateAccount.Margin = new Padding(3, 4, 3, 4);
             bCreateAccount.Name = "bCreateAccount";
-            bCreateAccount.Size = new Size(156, 23);
+            bCreateAccount.Size = new Size(187, 29);
             bCreateAccount.TabIndex = 6;
             bCreateAccount.Text = "Создать учетную запись";
             bCreateAccount.UseVisualStyleBackColor = true;
@@ -93,15 +98,16 @@
             // 
             // FormSignIn
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(416, 249);
+            ClientSize = new Size(475, 315);
             Controls.Add(bCreateAccount);
             Controls.Add(label1);
             Controls.Add(bLogIn);
             Controls.Add(label2);
-            Controls.Add(textBox2);
-            Controls.Add(textBox1);
+            Controls.Add(tb_Password);
+            Controls.Add(tb_Login);
+            Margin = new Padding(3, 4, 3, 4);
             Name = "FormSignIn";
             Text = "FormSignIn";
             ResumeLayout(false);
@@ -110,8 +116,8 @@
 
         #endregion
 
-        private TextBox textBox1;
-        private TextBox textBox2;
+        private TextBox tb_Login;
+        private TextBox tb_Password;
         private Label label2;
         private Button bLogIn;
         private Label label1;

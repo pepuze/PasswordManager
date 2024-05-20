@@ -9,20 +9,59 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Management;
+using System.Security.Cryptography;
 
 namespace PasswordKeeper
 {
     public partial class FormSignIn : Form
     {
-        List<UsbDriveInfo> usbDrives = new List<UsbDriveInfo>();
-        XmlDocument usersDoc;
+        public static readonly string usersDocPath = "users.xml";
+        Dictionary<string, UsbDriveInfo> usbDrives = new Dictionary<string, UsbDriveInfo>();
+        Dictionary<string, UserData> users = new Dictionary<string, UserData>();
+        XmlDocument usersDoc = new XmlDocument();
 
         public FormSignIn()
         {
+            if (!File.Exists(usersDocPath))
+            {
+                using (XmlWriter writer = XmlWriter.Create(usersDocPath))
+                {
+                    writer.WriteStartDocument(false);
+                    writer.WriteStartElement("Users");
+                    writer.WriteEndElement();
+                    writer.WriteEndDocument();
+                    writer.Flush();
+                    writer.Close();
+                }
+            }
+            try
+            {
+                usersDoc.Load(usersDocPath);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return;
+            }
+
             this.StartPosition = FormStartPosition.CenterScreen;
             populateDrives();
+            populateUsers();
 
             InitializeComponent();
+        }
+
+        private void populateUsers()
+        {
+            XmlElement? root = usersDoc.DocumentElement;
+            if (root != null && root.Name == "Users")
+            {
+                foreach (XmlElement node in root)
+                {
+                    var user = UserData.createUserFromXML(node);
+                    if (user != null) users.Add(user.Login, user);
+                }
+            }
         }
 
         private void populateDrives()
@@ -32,7 +71,7 @@ namespace PasswordKeeper
                 ToList();
             if (drivesRemovable.Count < 1) return;
 
-            foreach(ManagementObject drive in new ManagementObjectSearcher(
+            foreach (ManagementObject drive in new ManagementObjectSearcher(
                 "select DeviceID, PNPDeviceID, Model from Win32_DiskDrive " +
                 "where InterfaceType='USB'"
                 ).
@@ -54,7 +93,7 @@ namespace PasswordKeeper
 
                 ManagementObject? logicalDisk = null;
                 foreach (ManagementObject ld in logicalDisks) logicalDisk = ld;
-                if(logicalDisk == null) continue;
+                if (logicalDisk == null) continue;
 
                 var volumes = new ManagementObjectSearcher(String.Format(
                     "select VolumeName from Win32_LogicalDisk " +
@@ -62,7 +101,7 @@ namespace PasswordKeeper
                     logicalDisk["Name"])).Get();
                 ManagementObject? volume = null;
                 foreach (ManagementObject v in volumes) volume = v;
-                if(volume == null) continue;
+                if (volume == null) continue;
 
                 string log = logicalDisk["Name"].ToString();
                 string id = drive["DeviceID"].ToString();
@@ -79,21 +118,63 @@ namespace PasswordKeeper
 
                 if (foundDriveIndex > -1)
                 {
-                    usbDrives.Add(new UsbDriveInfo(id, pnpID, vol, log));
+                    usbDrives.Add(pnpID, new UsbDriveInfo(id, pnpID, vol, log));
                     drivesRemovable.RemoveAt(foundDriveIndex);
                 }
             }
-
-
         }
 
         private void bCreateAccount_Click(object sender, EventArgs e)
         {
             this.Hide();
-            FormCreateAccount fca = new FormCreateAccount();
+            FormCreateAccount fca = new FormCreateAccount(users);
             fca.StartPosition = FormStartPosition.CenterScreen;
-            fca.ShowDialog();
+            if (fca.ShowDialog() == DialogResult.OK)
+            {
+                users.Add(fca.user.Login, fca.user);
+                fca.user.saveToXML(usersDoc);
+                //todo: create user DB
+            }
             this.Show();
+        }
+
+        private void bLogIn_Click(object sender, EventArgs e)
+        {
+            string login = tb_Login.Text;
+            string password = tb_Password.Text;
+            bool loggedIn = false;
+            if (users.ContainsKey(login))
+            {
+                var desiredHash = users[login].PasswordHash;
+                var hash = getStringHash(password);
+                if (areEqualHashes(hash, desiredHash))
+                    loggedIn = true;
+            }
+
+            if (loggedIn)
+            {
+                MessageBox.Show("ВХОД!");
+            }
+            else
+            {
+                MessageBox.Show("Неправильный логин или пароль.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            //todo: добавить счетчик неправильных попыток и таймер 
+        }
+
+        public static byte[] getStringHash(string str)
+        {
+            using (HashAlgorithm hasher = SHA256.Create()) return hasher.ComputeHash(Encoding.UTF8.GetBytes(str));
+        }
+
+        public static bool areEqualHashes(in byte[] hash1, in byte[] hash2)
+        {
+            if (hash1.Length != hash2.Length) return false;
+            for(int i = 0; i < hash1.Length; ++i)
+            {
+                if (hash1[i] != hash2[i]) return false;
+            }
+            return true;
         }
     }
 }
