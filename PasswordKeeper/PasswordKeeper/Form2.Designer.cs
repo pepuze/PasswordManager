@@ -43,18 +43,20 @@
             button2 = new Button();
             button3 = new Button();
             maskedTextBox1 = new MaskedTextBox();
+            label7 = new Label();
+            label8 = new Label();
             SuspendLayout();
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(128, 34);
+            textBox1.Location = new Point(128, 54);
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(236, 23);
             textBox1.TabIndex = 0;
             // 
             // textBox2
             // 
-            textBox2.Location = new Point(128, 83);
+            textBox2.Location = new Point(128, 95);
             textBox2.Name = "textBox2";
             textBox2.Size = new Size(236, 23);
             textBox2.TabIndex = 1;
@@ -69,7 +71,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(86, 37);
+            label1.Location = new Point(86, 57);
             label1.Name = "label1";
             label1.Size = new Size(36, 15);
             label1.TabIndex = 3;
@@ -78,7 +80,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(78, 86);
+            label2.Location = new Point(78, 98);
             label2.Name = "label2";
             label2.Size = new Size(44, 15);
             label2.TabIndex = 4;
@@ -119,6 +121,7 @@
             textBox4.Name = "textBox4";
             textBox4.Size = new Size(236, 23);
             textBox4.TabIndex = 8;
+            textBox4.KeyPress += textBox4_KeyPress;
             // 
             // label5
             // 
@@ -163,15 +166,36 @@
             maskedTextBox1.Location = new Point(128, 309);
             maskedTextBox1.Mask = "+7 (000) 000-0000";
             maskedTextBox1.Name = "maskedTextBox1";
+            maskedTextBox1.ResetOnSpace = false;
             maskedTextBox1.Size = new Size(236, 23);
             maskedTextBox1.TabIndex = 15;
             maskedTextBox1.TextMaskFormat = MaskFormat.ExcludePromptAndLiterals;
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(12, 9);
+            label7.Name = "label7";
+            label7.Size = new Size(402, 15);
+            label7.TabIndex = 16;
+            label7.Text = "Примечание: сайт надо ввести с протоколом http или https (например,";
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(12, 24);
+            label8.Name = "label8";
+            label8.Size = new Size(123, 15);
+            label8.TabIndex = 17;
+            label8.Text = "https://example.com)";
             // 
             // Form2
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(461, 421);
+            Controls.Add(label8);
+            Controls.Add(label7);
             Controls.Add(maskedTextBox1);
             Controls.Add(button3);
             Controls.Add(button2);
@@ -209,5 +233,7 @@
         private Button button2;
         private Button button3;
         private MaskedTextBox maskedTextBox1;
+        private Label label7;
+        private Label label8;
     }
 }
