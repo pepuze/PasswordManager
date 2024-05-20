@@ -19,8 +19,6 @@ namespace PasswordKeeper
     public partial class Form2 : Form
     {
         public string f2_site, f2_userLogin, f2_userPass, f2_userName, f2_userPhone;
-        static string cyrillic = "йцукенгшщзхъэждлорпавыфячсмитьбю";
-
 
         public Form2()
         {
@@ -80,7 +78,7 @@ namespace PasswordKeeper
                 return;
             }
 
-            if(textBox4.Text.Length >= 0 &&  !checkIfFullName(textBox4.Text, out f2_userName))
+            if (textBox4.Text.Length >= 0 && !checkIfFullName(textBox4.Text, out f2_userName))
             {
                 MessageBox.Show("Вы не правильно ввели ФИО!", "Внимание");
                 return;
@@ -99,29 +97,42 @@ namespace PasswordKeeper
             }
             else
             {
-                var words = Regex.Split(FullName, @"\s{1,}");
+                var words = Regex.Split(FullName, @"\s{1,}"); //Разделение строки на слова как по одному, так и по нескольким пробелам
                 FullNameNew = "";
                 int wordCount = 0;
                 for (int i = 0; i < words.Length; ++i)
                 {
-                    if (words.Length < 0) continue;
-                    string word = words[i].ToLower();
-                    int? firstNotOf = word.Select((x, j) => new { Val = x, Idx = (int?)j })
-                        .Where(x => cyrillic.IndexOf(x.Val) == -1)
-                        .Select(x => x.Idx)
-                        .FirstOrDefault();
+                    if (words.Length < 0) continue; //Если ФИО не введены
+                    string word = words[i].ToLower(); //Приводим все буквы слов к нижнему регистру
                     ++wordCount;
-                    if (firstNotOf != null || wordCount > 3 || word == "")
+                    if (wordCount > 3 || word == "" || word == "-")
                     {
                         FullNameNew = "";
                         return false;
                     }
-                    StringBuilder wordSB = new StringBuilder(word);
-                    wordSB[0] = char.ToUpper(wordSB[0]);
+                    StringBuilder wordSB = new StringBuilder(word); //StringBuilder представляет собой динамическую строку
+                    wordSB[0] = char.ToUpper(wordSB[0]); //Приводим первую букву слова к верхнему регистру
                     word = wordSB.ToString();
+                    var subWords = Regex.Split(word, @"-{1,}");
+                    string newWord = "";
+                    for (int j = 0; j < subWords.Length; ++j)
+                    {
+                        if (subWords.Length < 0) continue;
+                        string subWord = subWords[j].ToLower();
+                        if (subWord == "")
+                        {
+                            newWord = "";
+                            return false;
+                        }
+                        StringBuilder wordSB1 = new StringBuilder(subWord);
+                        wordSB1[0] = char.ToUpper(wordSB1[0]);
+                        subWord = wordSB1.ToString();
+                        newWord = newWord + "-" + subWord;
+                    }
+                    word = newWord.Trim('-');
                     FullNameNew = FullNameNew + " " + word;
                 }
-                FullNameNew = FullNameNew.Trim();
+                FullNameNew = FullNameNew.Trim(); // Обрезка начальных или концевых символов с помощью Trim()
                 return true;
             }
         }
@@ -140,6 +151,15 @@ namespace PasswordKeeper
             else
             {
                 textBox3.UseSystemPasswordChar = true;
+            }
+        }
+
+        private void textBox4_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            char l = e.KeyChar;
+            if ((l < 'А' || l > 'я') && l != '\b' && l != '-' && l != ' ' && l != 'ё' && l != 'Ё')
+            {
+                e.Handled = true;
             }
         }
     }
