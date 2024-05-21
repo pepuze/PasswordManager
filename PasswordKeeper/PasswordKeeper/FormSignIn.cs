@@ -19,6 +19,10 @@ namespace PasswordKeeper
         Dictionary<string, UsbDriveInfo> usbDrives = new Dictionary<string, UsbDriveInfo>();
         Dictionary<string, UserData> users = new Dictionary<string, UserData>();
         XmlDocument usersDoc = new XmlDocument();
+        int passTryCount = 3;
+        System.Timers.Timer timerTimeOut;
+        System.Timers.Timer timerLabelUpdater;
+
 
         public FormSignIn()
         {
@@ -47,6 +51,7 @@ namespace PasswordKeeper
             this.StartPosition = FormStartPosition.CenterScreen;
             populateDrives();
             populateUsers();
+
 
             InitializeComponent();
         }
@@ -156,13 +161,41 @@ namespace PasswordKeeper
                 Form1 form = new Form1(login);
                 this.Hide();
                 form.ShowDialog();
+                tb_Login.Text = "";
+                tb_Password.Text = "";
                 this.Show();
             }
             else
             {
                 MessageBox.Show("Неправильный логин или пароль.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                --passTryCount;
+                if (passTryCount <= 0)
+                    beginTimeOut();
             }
-            //todo: добавить счетчик неправильных попыток и таймер 
+        }
+
+        private void beginTimeOut()
+        {
+            timerTimeOut = new System.Timers.Timer();
+            timerTimeOut.Interval = 600000; //10 минут в мс
+            bLogIn.Enabled = false;
+            bCreateAccount.Enabled = false;
+            timerTimeOut.Elapsed += endTimeOut;
+            lTimeOutTIme.Text = "Превышено количество попыток входа,\n\rтайм-аут 10 минут.";
+            timerTimeOut.Start();
+        }
+
+        private void endTimeOut(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            timerTimeOut.Stop();
+            bLogIn.Invoke(() => bLogIn.Enabled = true);
+            bCreateAccount.Invoke(() => bCreateAccount.Enabled = true);
+            passTryCount = 3;
+        }
+
+        private void tlu_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            
         }
 
         public static byte[] getStringHash(string str)

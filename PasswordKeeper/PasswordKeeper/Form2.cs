@@ -61,14 +61,14 @@ namespace PasswordKeeper
             try
             {
                 HttpWebRequest request = WebRequest.Create(f2_site) as HttpWebRequest;
-                request.Timeout = 5000;
+                request.Timeout = 10000;
                 request.AllowAutoRedirect = false;
                 var response = request.GetResponse();
                 response.Close();
             }
             catch
             {
-                MessageBox.Show("Сайт не существует!", "Внимание");
+                MessageBox.Show("Сайт не существует или превышено время ожидания ответа от сервера!", "Внимание");
                 return;
             }
 

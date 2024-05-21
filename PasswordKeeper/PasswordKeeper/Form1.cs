@@ -17,7 +17,7 @@ namespace PasswordKeeper
     public partial class Form1 : Form
     {
         int selectedRow;
-        static public string userName; //Èìÿ ïîëüçîâàòåëÿ
+        static public string userName;
 
         public Form1(string _userName)
         {
@@ -27,19 +27,19 @@ namespace PasswordKeeper
 
         private void CreateColumns()
         {
-            dataGridView1.Columns.Add("id_pass_info", "¹");
-            dataGridView1.Columns.Add("site_name", "Ñàéò");
-            dataGridView1.Columns.Add("pass_login", "Ëîãèí");
-            dataGridView1.Columns.Add("password_str", "Ïàðîëü");
-            dataGridView1.Columns.Add("user_name", "ÔÈÎ");
-            dataGridView1.Columns.Add("phone", "Òåëåôîí");
+            dataGridView1.Columns.Add("id_pass_info", "№");
+            dataGridView1.Columns.Add("site_name", "Сайт");
+            dataGridView1.Columns.Add("pass_login", "Логин");
+            dataGridView1.Columns.Add("password_str", "Пароль");
+            dataGridView1.Columns.Add("user_name", "ФИО");
+            dataGridView1.Columns.Add("phone", "Телефон");
             dataGridView1.Columns[0].Width = 50;
             dataGridView1.Columns[1].Width = 160;
             dataGridView1.Columns[2].Width = 300;
             dataGridView1.Columns[3].Width = 150;
         }
 
-        static public void ReadSingleRow(DataGridView dataGrid, IDataRecord record) //Èíòåðôåéñ IDataRecord ïðåäîñòàâëÿåò äîñòóï ê çíà÷åíèÿì ñòîëáöîâ â êàæäîé ñòðîêå.
+        static public void ReadSingleRow(DataGridView dataGrid, IDataRecord record) 
         {
             dataGrid.Rows.Add(record.GetInt32(0), record.GetString(1), record.GetString(2), record.GetString(3), record.GetString(4),
                 record.GetString(5));
@@ -87,7 +87,7 @@ namespace PasswordKeeper
         {
             dataGrid.Rows.Clear();
             SqlConnection connect = get_connection_process();
-            string stringQuery = $"select * from password_table where concat (site_name, pass_login) " + //concat - ñëîæåíèå ñòðîê ïðè âûáîðêå èç ÁÄ
+            string stringQuery = $"select * from password_table where concat (site_name, pass_login) " + 
                 $"like '%" + textBox1.Text + "%'";
             SqlCommand cmd = new SqlCommand(stringQuery, connect);
             openConnection(connect);
@@ -98,7 +98,7 @@ namespace PasswordKeeper
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //dbUserCreate(userName); //Ñîçäàíèå ÁÄ äëÿ ïîëüçîâàòåëÿ
+            //dbUserCreate(userName); 
 
             CreateColumns();
             RefreshDataGrid(dataGridView1);
@@ -112,8 +112,8 @@ namespace PasswordKeeper
             if (e.RowIndex >= 0)
             {
                 DataGridViewRow row = dataGridView1.Rows[selectedRow];
-                label2.Text = "ÔÈÎ: " + row.Cells[4].Value.ToString();
-                label3.Text = "Òåëåôîí: " + row.Cells[5].Value.ToString();
+                label2.Text = "ФИО: " + row.Cells[4].Value.ToString();
+                label3.Text = "Телефон: " + row.Cells[5].Value.ToString();
             }
         }
 
@@ -137,7 +137,7 @@ namespace PasswordKeeper
                 RefreshDataGrid(dataGridView1);
                 openConnection(connectProtocol);
                 var addQuery_Protocol = $"insert into operations_info (dateTimeInfo, userInfo, operation) values " +
-                    $"('{now.ToString()}', '{userName}', '{"Äîáàâëåíèå ïàðîëÿ"}')";
+                    $"('{now.ToString()}', '{userName}', '{"Добавление пароля"}')";
                 var command_protocol = new SqlCommand(addQuery_Protocol, connectProtocol);
                 command_protocol.ExecuteNonQuery();
                 closeConnection(connectProtocol);
@@ -153,12 +153,12 @@ namespace PasswordKeeper
         {
             if (dataGridView1.Rows.Count == 0)
             {
-                MessageBox.Show("Âàì íàäî ñíà÷àëà äîáàâèòü çàïèñü äëÿ óäàëåíèÿ ïàðîëÿ!", "Âíèìàíèå");
+                MessageBox.Show("Вам надо сначала добавить запись для удаления пароля!", "Внимание");
                 return;
             }
             else
             {
-                if (MessageBox.Show("Âû äåéñòâèòåëüíî õîòèòå óäàëèòü çàïèñü?", "Âíèìàíèå", MessageBoxButtons.YesNo,
+                if (MessageBox.Show("Вы действительно хотите удалить запись?", "Внимание", MessageBoxButtons.YesNo,
                     MessageBoxIcon.Warning) == DialogResult.No)
                     return;
                 SqlConnection connectProcess = get_connection_process();
@@ -175,7 +175,7 @@ namespace PasswordKeeper
                 RefreshDataGrid(dataGridView1);
                 openConnection(connectProtocol);
                 var deleteQuery_Protocol = $"insert into operations_info (dateTimeInfo, userInfo, operation) values " +
-                    $"('{now.ToString()}', '{userName}', '{"Óäàëåíèå ïàðîëÿ"}')";
+                    $"('{now.ToString()}', '{userName}', '{"Удаление пароля"}')";
                 var command_protocol = new SqlCommand(deleteQuery_Protocol, connectProtocol);
                 command_protocol.ExecuteNonQuery();
                 closeConnection(connectProtocol);
@@ -186,7 +186,7 @@ namespace PasswordKeeper
         {
             if (dataGridView1.Rows.Count == 0)
             {
-                MessageBox.Show("Âàì íàäî ñíà÷àëà äîáàâèòü çàïèñü äëÿ ðåäàêòèðîâàíèÿ ïàðîëÿ è/èëè äîïîëíèòåëüíîé èíôîðìàöèè!", "Âíèìàíèå");
+                MessageBox.Show("Вам надо сначала добавить запись для редактирования и/или дополнительной информации!", "Внимание");
                 return;
             }
             else
@@ -217,7 +217,7 @@ namespace PasswordKeeper
                     RefreshDataGrid(dataGridView1);
                     openConnection(connectProtocol);
                     var updateQuery_Protocol = $"insert into operations_info (dateTimeInfo, userInfo, operation) values " +
-                        $"('{now.ToString()}', '{userName}', '{"Èçìåíåíèå ïàðîëÿ è/èëè äîï. èíôîðìàöèè"}')";
+                        $"('{now.ToString()}', '{userName}', '{"Изменение пароля и/или доп. информации"}')";
                     var command_protocol = new SqlCommand(updateQuery_Protocol, connectProtocol);
                     command_protocol.ExecuteNonQuery();
                     closeConnection(connectProtocol);
@@ -287,7 +287,7 @@ namespace PasswordKeeper
             }
             catch
             {
-                MessageBox.Show("Áàçà äàííûõ ïðîòîêîëèðîâàíèÿ óæå ñóùåñòâóåò", "Âíèìàíèå");
+                MessageBox.Show("Не создался протокол.");
                 myConn_db.Close();
             }
 

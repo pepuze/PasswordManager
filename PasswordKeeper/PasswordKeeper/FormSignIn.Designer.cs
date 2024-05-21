@@ -34,32 +34,33 @@ namespace PasswordKeeper
             bLogIn = new Button();
             label1 = new Label();
             bCreateAccount = new Button();
+            lTimeOutTIme = new Label();
             SuspendLayout();
             // 
             // tb_Login
             // 
-            tb_Login.Location = new Point(154, 130);
+            tb_Login.Location = new Point(74, 16);
             tb_Login.Margin = new Padding(3, 4, 3, 4);
             tb_Login.MaxLength = 64;
             tb_Login.Name = "tb_Login";
-            tb_Login.Size = new Size(178, 26);
+            tb_Login.Size = new Size(255, 26);
             tb_Login.TabIndex = 0;
             // 
             // tb_Password
             // 
             tb_Password.HideSelection = false;
-            tb_Password.Location = new Point(154, 167);
+            tb_Password.Location = new Point(74, 53);
             tb_Password.Margin = new Padding(3, 4, 3, 4);
             tb_Password.MaxLength = 64;
             tb_Password.Name = "tb_Password";
             tb_Password.PasswordChar = '*';
-            tb_Password.Size = new Size(178, 26);
+            tb_Password.Size = new Size(255, 26);
             tb_Password.TabIndex = 1;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(97, 134);
+            label2.Location = new Point(17, 20);
             label2.Name = "label2";
             label2.Size = new Size(55, 20);
             label2.TabIndex = 3;
@@ -67,10 +68,10 @@ namespace PasswordKeeper
             // 
             // bLogIn
             // 
-            bLogIn.Location = new Point(203, 204);
+            bLogIn.Location = new Point(91, 87);
             bLogIn.Margin = new Padding(3, 4, 3, 4);
             bLogIn.Name = "bLogIn";
-            bLogIn.Size = new Size(86, 29);
+            bLogIn.Size = new Size(191, 29);
             bLogIn.TabIndex = 4;
             bLogIn.Text = "Войти";
             bLogIn.UseVisualStyleBackColor = true;
@@ -79,7 +80,7 @@ namespace PasswordKeeper
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(88, 171);
+            label1.Location = new Point(7, 56);
             label1.Name = "label1";
             label1.Size = new Size(65, 20);
             label1.TabIndex = 5;
@@ -87,20 +88,29 @@ namespace PasswordKeeper
             // 
             // bCreateAccount
             // 
-            bCreateAccount.Location = new Point(145, 241);
+            bCreateAccount.Location = new Point(91, 124);
             bCreateAccount.Margin = new Padding(3, 4, 3, 4);
             bCreateAccount.Name = "bCreateAccount";
-            bCreateAccount.Size = new Size(187, 29);
+            bCreateAccount.Size = new Size(191, 29);
             bCreateAccount.TabIndex = 6;
             bCreateAccount.Text = "Создать учетную запись";
             bCreateAccount.UseVisualStyleBackColor = true;
             bCreateAccount.Click += bCreateAccount_Click;
             // 
+            // lTimeOutTIme
+            // 
+            lTimeOutTIme.AutoSize = true;
+            lTimeOutTIme.Location = new Point(17, 163);
+            lTimeOutTIme.Name = "lTimeOutTIme";
+            lTimeOutTIme.Size = new Size(0, 20);
+            lTimeOutTIme.TabIndex = 7;
+            // 
             // FormSignIn
             // 
             AutoScaleDimensions = new SizeF(8F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(475, 315);
+            ClientSize = new Size(347, 214);
+            Controls.Add(lTimeOutTIme);
             Controls.Add(bCreateAccount);
             Controls.Add(label1);
             Controls.Add(bLogIn);
@@ -109,7 +119,7 @@ namespace PasswordKeeper
             Controls.Add(tb_Login);
             Margin = new Padding(3, 4, 3, 4);
             Name = "FormSignIn";
-            Text = "FormSignIn";
+            Text = "Вход";
             ResumeLayout(false);
             PerformLayout();
         }
@@ -122,5 +132,6 @@ namespace PasswordKeeper
         private Button bLogIn;
         private Label label1;
         private Button bCreateAccount;
+        private Label lTimeOutTIme;
     }
 }

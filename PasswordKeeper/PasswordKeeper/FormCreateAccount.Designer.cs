@@ -40,40 +40,38 @@ namespace PasswordKeeper
             // 
             // tb_Login
             // 
-            tb_Login.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            tb_Login.Location = new Point(175, 96);
+            tb_Login.Location = new Point(175, 23);
             tb_Login.Margin = new Padding(3, 4, 3, 4);
             tb_Login.MaxLength = 64;
             tb_Login.Name = "tb_Login";
-            tb_Login.Size = new Size(153, 26);
+            tb_Login.Size = new Size(172, 26);
             tb_Login.TabIndex = 0;
             // 
             // tb_Password
             // 
-            tb_Password.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            tb_Password.Location = new Point(175, 133);
+            tb_Password.Location = new Point(175, 60);
             tb_Password.Margin = new Padding(3, 4, 3, 4);
             tb_Password.MaxLength = 64;
             tb_Password.Name = "tb_Password";
             tb_Password.PasswordChar = '*';
-            tb_Password.Size = new Size(153, 26);
+            tb_Password.Size = new Size(172, 26);
             tb_Password.TabIndex = 1;
+            tb_Password.Enter += tb_PasswordRepeat_Enter;
             // 
             // tb_PasswordRepeat
             // 
-            tb_PasswordRepeat.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            tb_PasswordRepeat.Location = new Point(175, 170);
+            tb_PasswordRepeat.Location = new Point(175, 97);
             tb_PasswordRepeat.Margin = new Padding(3, 4, 3, 4);
             tb_PasswordRepeat.MaxLength = 64;
             tb_PasswordRepeat.Name = "tb_PasswordRepeat";
             tb_PasswordRepeat.PasswordChar = '*';
-            tb_PasswordRepeat.Size = new Size(153, 26);
+            tb_PasswordRepeat.Size = new Size(172, 26);
             tb_PasswordRepeat.TabIndex = 2;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(26, 99);
+            label1.Location = new Point(26, 26);
             label1.Name = "label1";
             label1.Size = new Size(143, 20);
             label1.TabIndex = 3;
@@ -82,7 +80,7 @@ namespace PasswordKeeper
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(27, 170);
+            label2.Location = new Point(27, 97);
             label2.Name = "label2";
             label2.Size = new Size(142, 20);
             label2.TabIndex = 4;
@@ -91,7 +89,7 @@ namespace PasswordKeeper
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(16, 136);
+            label3.Location = new Point(16, 63);
             label3.Name = "label3";
             label3.Size = new Size(153, 20);
             label3.TabIndex = 5;
@@ -99,9 +97,9 @@ namespace PasswordKeeper
             // 
             // bCreate
             // 
-            bCreate.Location = new Point(16, 299);
+            bCreate.Location = new Point(12, 134);
             bCreate.Name = "bCreate";
-            bCreate.Size = new Size(90, 28);
+            bCreate.Size = new Size(122, 28);
             bCreate.TabIndex = 6;
             bCreate.Text = "Создать";
             bCreate.UseVisualStyleBackColor = true;
@@ -110,9 +108,9 @@ namespace PasswordKeeper
             // bCancel
             // 
             bCancel.DialogResult = DialogResult.Cancel;
-            bCancel.Location = new Point(432, 299);
+            bCancel.Location = new Point(231, 134);
             bCancel.Name = "bCancel";
-            bCancel.Size = new Size(90, 28);
+            bCancel.Size = new Size(116, 28);
             bCancel.TabIndex = 7;
             bCancel.Text = "Отменить";
             bCancel.UseVisualStyleBackColor = true;
@@ -122,7 +120,7 @@ namespace PasswordKeeper
             // 
             AutoScaleDimensions = new SizeF(8F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(534, 339);
+            ClientSize = new Size(373, 173);
             Controls.Add(bCancel);
             Controls.Add(bCreate);
             Controls.Add(label3);
@@ -133,7 +131,7 @@ namespace PasswordKeeper
             Controls.Add(tb_Login);
             Margin = new Padding(3, 4, 3, 4);
             Name = "FormCreateAccount";
-            Text = "FormCreateAccount";
+            Text = "Создание учетной записи";
             ResumeLayout(false);
             PerformLayout();
         }
