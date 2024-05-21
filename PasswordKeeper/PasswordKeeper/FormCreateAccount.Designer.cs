@@ -1,4 +1,4 @@
-namespace PasswordKeeper
+﻿namespace PasswordKeeper
 {
     partial class FormCreateAccount
     {
