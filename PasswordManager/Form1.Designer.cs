@@ -31,6 +31,7 @@
             tbFilePath = new TextBox();
             bBrowse = new Button();
             bEcnrypt = new Button();
+            bDecrypt = new Button();
             SuspendLayout();
             // 
             // tbFilePath
@@ -53,7 +54,7 @@
             // 
             // bEcnrypt
             // 
-            bEcnrypt.Location = new Point(356, 60);
+            bEcnrypt.Location = new Point(21, 60);
             bEcnrypt.Name = "bEcnrypt";
             bEcnrypt.Size = new Size(118, 28);
             bEcnrypt.TabIndex = 2;
@@ -61,11 +62,22 @@
             bEcnrypt.UseVisualStyleBackColor = true;
             bEcnrypt.Click += bEcnrypt_Click;
             // 
+            // bDecrypt
+            // 
+            bDecrypt.Location = new Point(356, 60);
+            bDecrypt.Name = "bDecrypt";
+            bDecrypt.Size = new Size(118, 28);
+            bDecrypt.TabIndex = 3;
+            bDecrypt.Text = "Дешифровать";
+            bDecrypt.UseVisualStyleBackColor = true;
+            bDecrypt.Click += bDecrypt_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(486, 100);
+            Controls.Add(bDecrypt);
             Controls.Add(bEcnrypt);
             Controls.Add(bBrowse);
             Controls.Add(tbFilePath);
@@ -80,5 +92,6 @@
         private TextBox tbFilePath;
         private Button bBrowse;
         private Button bEcnrypt;
+        private Button bDecrypt;
     }
 }
