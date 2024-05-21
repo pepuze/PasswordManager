@@ -68,7 +68,9 @@ namespace PasswordKeeper
             }
             catch
             {
+
                 MessageBox.Show("Сайт не существует или превышено время ответа от сервера!", "Внимание");
+
                 return;
             }
 

@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Management;
 using System.Security.Cryptography;
+using System.Data.SqlClient;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace PasswordKeeper
 {
@@ -19,6 +21,75 @@ namespace PasswordKeeper
         Dictionary<string, UsbDriveInfo> usbDrives = new Dictionary<string, UsbDriveInfo>();
         Dictionary<string, UserData> users = new Dictionary<string, UserData>();
         XmlDocument usersDoc = new XmlDocument();
+        int passTryCount = 3;
+        System.Timers.Timer timerTimeOut;
+        System.Timers.Timer timerLabelUpdater;
+
+        static public void openConnection(SqlConnection connect)
+        {
+            if (connect.State == System.Data.ConnectionState.Closed)
+                connect.Open();
+        }
+
+        static public void closeConnection(SqlConnection connect)
+        {
+            if (connect.State == System.Data.ConnectionState.Open)
+                connect.Close();
+        }
+
+        static public SqlConnection get_connection_protocol()
+        {
+            SqlConnection db_connect_protocol = new SqlConnection("Data Source=" + SystemInformation.ComputerName +
+                @"\SQLEXPRESS;Initial Catalog=protocol_db;Integrated Security=True");
+            return db_connect_protocol;
+        }
+
+        static public void createProtocolDB()
+        {
+            string protocol_db;
+            SqlConnection myConn_db = new SqlConnection("Server=" + SystemInformation.ComputerName + $@"\SQLEXPRESS;Integrated Security=True;database=master");
+            string dataPath = Environment.CurrentDirectory + "\\Data";
+            string logPath = Environment.CurrentDirectory + "\\Log";
+            if (!Directory.Exists(dataPath))
+            {
+                Directory.CreateDirectory(dataPath);
+            }
+            if (!Directory.Exists(logPath))
+            {
+                Directory.CreateDirectory(logPath);
+            }
+
+            try
+            {
+                protocol_db =
+                $"CREATE DATABASE protocol_db ON " +
+                $"( NAME = N'protocol_db_Data', FILENAME = N'{dataPath}\\protocol_db_Data.mdf' , SIZE = 1024KB , MAXSIZE = 25MB, FILEGROWTH = 1024KB ) " +
+                $"LOG ON " +
+                $"( NAME = N'protocol_db_Log', FILENAME = N'{logPath}\\protocol_db_Log.mdf', SIZE = 1024KB, MAXSIZE = 8MB, FILEGROWTH = 1024KB ) ";
+
+                SqlCommand myCommandProtocolCreate1 = new SqlCommand(protocol_db, myConn_db);
+
+                myConn_db.Open();
+                myCommandProtocolCreate1.ExecuteNonQuery();
+                myConn_db.Close();
+
+                string str_table_protocol;
+                SqlConnection myConn_table_protocol = new SqlConnection("Data Source=" + SystemInformation.ComputerName + $@"\SQLEXPRESS;Initial Catalog=protocol_db;Integrated Security=True");
+
+                str_table_protocol = "CREATE TABLE operations_info (idProtocol INT PRIMARY KEY IDENTITY, dateTimeInfo NVARCHAR(100), userInfo "
+                + "NVARCHAR(100), operation VARCHAR(100));";
+
+                SqlCommand myCommandProtocolCreate2 = new SqlCommand(str_table_protocol, myConn_table_protocol);
+                myConn_table_protocol.Open();
+                myCommandProtocolCreate2.ExecuteNonQuery();
+                myConn_table_protocol.Close();
+            }
+            catch
+            {
+
+                myConn_db.Close();
+            }
+        }
 
         public FormSignIn()
         {
@@ -47,6 +118,7 @@ namespace PasswordKeeper
             this.StartPosition = FormStartPosition.CenterScreen;
             populateDrives();
             populateUsers();
+
 
             InitializeComponent();
         }
@@ -143,6 +215,9 @@ namespace PasswordKeeper
             string login = tb_Login.Text;
             string password = tb_Password.Text;
             bool loggedIn = false;
+            createProtocolDB();
+            SqlConnection connectProtocol = get_connection_protocol();
+            openConnection(connectProtocol);
             if (users.ContainsKey(login))
             {
                 var desiredHash = users[login].PasswordHash;
@@ -153,16 +228,61 @@ namespace PasswordKeeper
 
             if (loggedIn)
             {
+                DateTime now = DateTime.Now;
+                var loginSuccessQuery_Protocol = $"insert into operations_info (dateTimeInfo, userInfo, operation) values " +
+
+                    $"('{now.ToString()}', '{login}', '{"Успешный вход в систему"}')";
+
+                var command_protocol = new SqlCommand(loginSuccessQuery_Protocol, connectProtocol);
+                command_protocol.ExecuteNonQuery();
+
                 Form1 form = new Form1(login);
                 this.Hide();
                 form.ShowDialog();
+                tb_Login.Text = "";
+                tb_Password.Text = "";
                 this.Show();
             }
             else
             {
+                DateTime now = DateTime.Now;
+                var loginFailureQuery_Protocol = $"insert into operations_info (dateTimeInfo, userInfo, operation) values " +
+
+                    $"('{now.ToString()}', '{login}', '{"Неуспешный вход в систему"}')";
+
+                var command_protocol = new SqlCommand(loginFailureQuery_Protocol, connectProtocol);
+                command_protocol.ExecuteNonQuery();
+
                 MessageBox.Show("Неправильный логин или пароль.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                --passTryCount;
+                if (passTryCount <= 0)
+                    beginTimeOut();
             }
-            //todo: добавить счетчик неправильных попыток и таймер 
+            closeConnection(connectProtocol);
+        }
+
+        private void beginTimeOut()
+        {
+            timerTimeOut = new System.Timers.Timer();
+            timerTimeOut.Interval = 30000; //10 минут в мс
+            bLogIn.Enabled = false;
+            bCreateAccount.Enabled = false;
+            timerTimeOut.Elapsed += endTimeOut;
+            lTimeOutTIme.Text = "Превышено количество попыток входа,\n\rтайм-аут 10 минут.";
+            timerTimeOut.Start();
+        }
+
+        private void endTimeOut(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            timerTimeOut.Stop();
+            bLogIn.Invoke(() => bLogIn.Enabled = true);
+            bCreateAccount.Invoke(() => bCreateAccount.Enabled = true);
+            passTryCount = 3;
+        }
+
+        private void tlu_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            
         }
 
         public static byte[] getStringHash(string str)
