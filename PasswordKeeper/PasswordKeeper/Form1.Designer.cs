@@ -39,6 +39,7 @@
             label2 = new Label();
             label3 = new Label();
             label4 = new Label();
+            button4 = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -105,10 +106,10 @@
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.AllowUserToDeleteRows = false;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(12, 114);
+            dataGridView1.Location = new Point(12, 109);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.ReadOnly = true;
-            dataGridView1.Size = new Size(719, 265);
+            dataGridView1.Size = new Size(719, 270);
             dataGridView1.TabIndex = 6;
             dataGridView1.CellClick += dataGridView1_CellClick;
             dataGridView1.CellFormatting += dataGridView1_CellFormatting;
@@ -140,11 +141,22 @@
             label4.TabIndex = 9;
             label4.Text = "Дополнительная информация";
             // 
+            // button4
+            // 
+            button4.Location = new Point(544, 389);
+            button4.Name = "button4";
+            button4.Size = new Size(187, 23);
+            button4.TabIndex = 10;
+            button4.Text = "Просмотреть журнал событий";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += button4_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(743, 468);
+            Controls.Add(button4);
             Controls.Add(label4);
             Controls.Add(label3);
             Controls.Add(label2);
@@ -176,5 +188,6 @@
         private Label label2;
         private Label label3;
         private Label label4;
+        private Button button4;
     }
 }
