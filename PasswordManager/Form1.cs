@@ -6,5 +6,20 @@ namespace PasswordManager
         {
             InitializeComponent();
         }
+
+        private void bBrowse_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "ֻ‏בûו פאיכû; .*";
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                tbFilePath.Text = ofd.FileName;
+            }
+        }
+
+        private void bEcnrypt_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

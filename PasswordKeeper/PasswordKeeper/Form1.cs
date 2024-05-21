@@ -248,13 +248,17 @@ namespace PasswordKeeper
             string str_db;
             SqlConnection myConn_db = new SqlConnection("Server=" + SystemInformation.ComputerName + $@"\SQLEXPRESS;Integrated Security=True;database=master");
 
-            str_db = $"CREATE DATABASE {userName}";
+            str_db = 
+                $"CREATE DATABASE {userName} ON " +
+                $"( NAME = N'{userName}_Data', FILENAME = N'C:\\test\\{userName}_Data.mdf' , SIZE = 1024KB , MAXSIZE = 25MB, FILEGROWTH = 1024KB ) " +
+                $"LOG ON " +
+                $"( NAME = N'{userName}_Log', FILENAME = N'C:\\test\\{userName}_Log.mdf', SIZE = 1024KB, MAXSIZE = 8MB, FILEGROWTH = 1024KB ) ";
 
             SqlCommand myCommand1 = new SqlCommand(str_db, myConn_db);
             myConn_db.Open();
             myCommand1.ExecuteNonQuery();
             myConn_db.Close();
-
+            
             string str_table;
             SqlConnection myConn_table = new SqlConnection("Data Source=" + SystemInformation.ComputerName + $@"\SQLEXPRESS;Initial Catalog={userName};Integrated Security=True");
 

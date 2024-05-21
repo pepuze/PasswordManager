@@ -133,7 +133,7 @@ namespace PasswordKeeper
             {
                 users.Add(fca.user.Login, fca.user);
                 fca.user.saveToXML(usersDoc);
-                //todo: create user DB
+                Form1.dbUserCreate(fca.user.Login);
             }
             this.Show();
         }
