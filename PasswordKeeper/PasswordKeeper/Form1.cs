@@ -10,16 +10,18 @@ using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using System.Security.Policy;
 using System.Reflection;
+using System.IO;
 
 namespace PasswordKeeper
 {
     public partial class Form1 : Form
     {
         int selectedRow;
-        static public string userName = "User1"; //Имя пользователя
+        static public string userName; //Имя пользователя
 
-        public Form1()
+        public Form1(string _userName)
         {
+            userName = _userName;
             InitializeComponent();
         }
 
@@ -245,16 +247,62 @@ namespace PasswordKeeper
 
         static public void dbUserCreate(string userName)
         {
-            string str_db;
+            string str_db, protocol_db;
             SqlConnection myConn_db = new SqlConnection("Server=" + SystemInformation.ComputerName + $@"\SQLEXPRESS;Integrated Security=True;database=master");
+            string dataPath = Environment.CurrentDirectory + "\\Data";
+            string logPath = Environment.CurrentDirectory + "\\Log";
+            if (!Directory.Exists(dataPath))
+            {
+                Directory.CreateDirectory(dataPath);
+            }
+            if (!Directory.Exists(logPath))
+            {
+                Directory.CreateDirectory(logPath);
+            }
 
-            str_db = $"CREATE DATABASE {userName}";
+            try
+            {
+                protocol_db =
+                $"CREATE DATABASE protocol_db ON " +
+                $"( NAME = N'protocol_db_Data', FILENAME = N'{dataPath}\\protocol_db_Data.mdf' , SIZE = 1024KB , MAXSIZE = 25MB, FILEGROWTH = 1024KB ) " +
+                $"LOG ON " +
+                $"( NAME = N'protocol_db_Log', FILENAME = N'{logPath}\\protocol_db_Log.mdf', SIZE = 1024KB, MAXSIZE = 8MB, FILEGROWTH = 1024KB ) ";
+
+                SqlCommand myCommandProtocolCreate1 = new SqlCommand(protocol_db, myConn_db);
+
+                myConn_db.Open();
+                myCommandProtocolCreate1.ExecuteNonQuery();
+                myConn_db.Close();
+
+                string str_table_protocol;
+                SqlConnection myConn_table_protocol = new SqlConnection("Data Source=" + SystemInformation.ComputerName + $@"\SQLEXPRESS;Initial Catalog=protocol_db;Integrated Security=True");
+
+                str_table_protocol = "CREATE TABLE operations_info (idProtocol INT PRIMARY KEY IDENTITY, dateTimeInfo NVARCHAR(100), userInfo "
+                + "NVARCHAR(100), operation VARCHAR(100));";
+
+                SqlCommand myCommandProtocolCreate2 = new SqlCommand(str_table_protocol, myConn_table_protocol);
+                myConn_table_protocol.Open();
+                myCommandProtocolCreate2.ExecuteNonQuery();
+                myConn_table_protocol.Close();
+            }
+            catch
+            {
+                MessageBox.Show("База данных протоколирования уже существует", "Внимание");
+                myConn_db.Close();
+            }
+
+            str_db = 
+                $"CREATE DATABASE {userName} ON " +
+                $"( NAME = N'{userName}_Data', FILENAME = N'{dataPath}\\{userName}_Data.mdf' , SIZE = 1024KB , MAXSIZE = 25MB, FILEGROWTH = 1024KB ) " +
+                $"LOG ON " +
+                $"( NAME = N'{userName}_Log', FILENAME = N'{logPath}\\{userName}_Log.mdf', SIZE = 1024KB, MAXSIZE = 8MB, FILEGROWTH = 1024KB ) ";
 
             SqlCommand myCommand1 = new SqlCommand(str_db, myConn_db);
+
             myConn_db.Open();
             myCommand1.ExecuteNonQuery();
             myConn_db.Close();
-
+            
             string str_table;
             SqlConnection myConn_table = new SqlConnection("Data Source=" + SystemInformation.ComputerName + $@"\SQLEXPRESS;Initial Catalog={userName};Integrated Security=True");
 
