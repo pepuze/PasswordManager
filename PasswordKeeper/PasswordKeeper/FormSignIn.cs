@@ -10,6 +10,9 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Management;
 using System.Security.Cryptography;
+using System.Diagnostics;
+using Microsoft.VisualBasic.Logging;
+using System.Reflection.Metadata;
 
 namespace PasswordKeeper
 {
@@ -19,9 +22,9 @@ namespace PasswordKeeper
         Dictionary<string, UsbDriveInfo> usbDrives = new Dictionary<string, UsbDriveInfo>();
         Dictionary<string, UserData> users = new Dictionary<string, UserData>();
         XmlDocument usersDoc = new XmlDocument();
+        TimeoutTimer? timer = null;
         int passTryCount = 3;
-        System.Timers.Timer timerTimeOut;
-        System.Timers.Timer timerLabelUpdater;
+        int timeOutTimeMs = 60000;
 
 
         public FormSignIn()
@@ -50,10 +53,9 @@ namespace PasswordKeeper
 
             this.StartPosition = FormStartPosition.CenterScreen;
             populateDrives();
-            populateUsers();
-
 
             InitializeComponent();
+            populateUsers();
         }
 
         private void populateUsers()
@@ -63,6 +65,12 @@ namespace PasswordKeeper
             {
                 foreach (XmlElement node in root)
                 {
+                    if(node.Name == "timeout_left")
+                    {
+                        beginTimeOut(Convert.ToInt32(node.InnerText));
+                        root.RemoveChild(node);
+                        usersDoc.Save(FormSignIn.usersDocPath);
+                    }
                     var user = UserData.createUserFromXML(node);
                     if (user != null) users.Add(user.Login, user);
                 }
@@ -170,24 +178,26 @@ namespace PasswordKeeper
                 MessageBox.Show("Неправильный логин или пароль.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 --passTryCount;
                 if (passTryCount <= 0)
-                    beginTimeOut();
+                    beginTimeOut(timeOutTimeMs);
             }
         }
 
-        private void beginTimeOut()
+        private void beginTimeOut(int timeMs)
         {
-            timerTimeOut = new System.Timers.Timer();
-            timerTimeOut.Interval = 600000; //10 минут в мс
+            timer = new TimeoutTimer(timeMs);
             bLogIn.Enabled = false;
             bCreateAccount.Enabled = false;
-            timerTimeOut.Elapsed += endTimeOut;
-            lTimeOutTIme.Text = "Превышено количество попыток входа,\n\rтайм-аут 10 минут.";
-            timerTimeOut.Start();
+            timer.Value.timerMain.Elapsed += endTimeOut;
+            lTimeOutTIme.Visible = true;
+            lTimeOutTIme.Text = "Превышено количество попыток входа,\n\rтайм-аут...";
+            timer.Value.start();
         }
 
         private void endTimeOut(object? sender, System.Timers.ElapsedEventArgs e)
         {
-            timerTimeOut.Stop();
+            timer = null;
+            lTimeOutTIme.Invoke(() => lTimeOutTIme.Visible = false);
+
             bLogIn.Invoke(() => bLogIn.Enabled = true);
             bCreateAccount.Invoke(() => bCreateAccount.Enabled = true);
             passTryCount = 3;
@@ -195,7 +205,7 @@ namespace PasswordKeeper
 
         private void tlu_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
-            
+
         }
 
         public static byte[] getStringHash(string str)
@@ -206,11 +216,55 @@ namespace PasswordKeeper
         public static bool areEqualHashes(in byte[] hash1, in byte[] hash2)
         {
             if (hash1.Length != hash2.Length) return false;
-            for(int i = 0; i < hash1.Length; ++i)
+            for (int i = 0; i < hash1.Length; ++i)
             {
                 if (hash1[i] != hash2[i]) return false;
             }
             return true;
+        }
+
+        private void FormSignIn_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (timer != null) timer.Value.saveToXML(usersDoc);
+        }
+    }
+
+    public struct TimeoutTimer
+    {
+        private static readonly string node_time = "timeout_left";
+
+        public int _timeoutMs;
+        public System.Timers.Timer timerMain;
+        public Stopwatch stopwatch;
+        public TimeoutTimer(int timeoutMs)
+        {
+            _timeoutMs = timeoutMs;
+            timerMain = new System.Timers.Timer();
+            timerMain.Interval = (double)_timeoutMs;
+            stopwatch = new Stopwatch();
+        }
+
+        public void start()
+        {
+            timerMain.Start();
+            stopwatch.Start();
+        }
+
+        public void stop()
+        {
+            timerMain.Stop();
+            stopwatch.Stop();
+        }
+
+        public void saveToXML(XmlDocument document)
+        {
+            XmlElement timeNode = document.CreateElement(node_time);
+            timeNode.InnerText = (_timeoutMs - stopwatch.ElapsedMilliseconds).ToString();
+
+            var root = document.DocumentElement;
+            root.AppendChild(timeNode);
+
+            document.Save(FormSignIn.usersDocPath);
         }
     }
 }

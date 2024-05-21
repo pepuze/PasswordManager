@@ -120,6 +120,7 @@
             Margin = new Padding(3, 4, 3, 4);
             Name = "FormSignIn";
             Text = "Вход";
+            FormClosing += FormSignIn_FormClosing;
             ResumeLayout(false);
             PerformLayout();
         }
