@@ -28,12 +28,57 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Form1";
+            tbFilePath = new TextBox();
+            bBrowse = new Button();
+            bEcnrypt = new Button();
+            SuspendLayout();
+            // 
+            // tbFilePath
+            // 
+            tbFilePath.Location = new Point(12, 12);
+            tbFilePath.Name = "tbFilePath";
+            tbFilePath.ReadOnly = true;
+            tbFilePath.Size = new Size(366, 26);
+            tbFilePath.TabIndex = 0;
+            // 
+            // bBrowse
+            // 
+            bBrowse.Location = new Point(384, 12);
+            bBrowse.Name = "bBrowse";
+            bBrowse.Size = new Size(90, 28);
+            bBrowse.TabIndex = 1;
+            bBrowse.Text = "Обзор";
+            bBrowse.UseVisualStyleBackColor = true;
+            bBrowse.Click += bBrowse_Click;
+            // 
+            // bEcnrypt
+            // 
+            bEcnrypt.Location = new Point(356, 60);
+            bEcnrypt.Name = "bEcnrypt";
+            bEcnrypt.Size = new Size(118, 28);
+            bEcnrypt.TabIndex = 2;
+            bEcnrypt.Text = "Зашифровать";
+            bEcnrypt.UseVisualStyleBackColor = true;
+            bEcnrypt.Click += bEcnrypt_Click;
+            // 
+            // Form1
+            // 
+            AutoScaleDimensions = new SizeF(8F, 19F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(486, 100);
+            Controls.Add(bEcnrypt);
+            Controls.Add(bBrowse);
+            Controls.Add(tbFilePath);
+            Name = "Form1";
+            Text = "Form1";
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
+
+        private TextBox tbFilePath;
+        private Button bBrowse;
+        private Button bEcnrypt;
     }
 }
