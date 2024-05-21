@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -153,7 +153,10 @@ namespace PasswordKeeper
 
             if (loggedIn)
             {
-                MessageBox.Show("ВХОД!");
+                Form1 form = new Form1(login);
+                this.Hide();
+                form.ShowDialog();
+                this.Show();
             }
             else
             {
